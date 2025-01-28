@@ -8,13 +8,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.tickticketing.R
 import com.example.tickticketing.databinding.ActivityLoginBinding
-
-import com.example.tickticketing.model.UserModel
 import com.example.tickticketing.repository.UserRepositoryImpl
 import com.example.tickticketing.utils.Loader
 import com.example.tickticketing.viewmodel.UserViewModel
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding : ActivityLoginBinding
@@ -66,7 +63,6 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
-
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
