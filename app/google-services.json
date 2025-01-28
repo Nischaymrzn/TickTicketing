@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1039756532783",
+    "project_id": "tickticketing-f81ea",
+    "storage_bucket": "tickticketing-f81ea.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1039756532783:android:959b5861ab2de89d057ada",
+        "android_client_info": {
+          "package_name": "com.example.tickticketing"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfoy2_KijFkNLSVSQ1JsnPLGAqBRtRDzI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
