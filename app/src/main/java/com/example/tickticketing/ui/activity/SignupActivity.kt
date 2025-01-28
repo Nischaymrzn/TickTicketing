@@ -40,13 +40,14 @@ class SignupActivity : AppCompatActivity() {
             val password : String = binding.signupPasswordText.text.toString()
             val address : String= binding.signupAddressText.text.toString()
             val fullName : String = binding.signupFnameText.text.toString()
-            val phoneNumber : String = binding.signupNumberText.text.toString()
+            val username : String = binding.usernameText.text.toString()
+            val userRole : String = "client"
 
             userViewModel.signup(email,password){ success, message, userId ->
                 if (success) {
                     val userModel = UserModel(
                         userId,
-                        fullName, email, phoneNumber, address
+                        fullName, email, username, address, userRole
                     )
                     addUserToDatabase(userModel)
                 }else{
