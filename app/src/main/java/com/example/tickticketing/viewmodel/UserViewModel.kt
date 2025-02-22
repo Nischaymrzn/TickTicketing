@@ -1,5 +1,7 @@
 package com.example.tickticketing.viewmodel
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.example.tickticketing.model.UserModel
 import com.example.tickticketing.repository.UserRepository
@@ -45,8 +47,13 @@ class UserViewModel(private val repo : UserRepository) {
     fun logout(callback: (Boolean, String) -> Unit){
         repo.logout(callback)
     }
+
     fun editProfile(userId: String, data : MutableMap<String, Any>, callback: (Boolean, String) -> Unit){
         repo.editProfile(userId,data,callback)
+    }
+
+    fun uploadImage(context: Context, imageUri: Uri, callback: (String?) -> Unit){
+        repo.uploadImage(context, imageUri, callback)
     }
 
 }
