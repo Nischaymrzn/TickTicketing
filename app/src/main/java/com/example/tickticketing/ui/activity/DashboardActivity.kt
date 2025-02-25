@@ -25,6 +25,14 @@ class DashboardActivity : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 
+    fun navigateToBookings() {
+        binding.bottomNav.selectedItemId = R.id.myBookingsFragment
+    }
+
+    fun navigateToEvents() {
+        binding.bottomNav.selectedItemId = R.id.myEventsFragment
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

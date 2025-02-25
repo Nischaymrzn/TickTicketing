@@ -52,6 +52,8 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.material.v190)
+    implementation(libs.glide)
+    annotationProcessor(libs.compiler)
     implementation(libs.lottie)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
