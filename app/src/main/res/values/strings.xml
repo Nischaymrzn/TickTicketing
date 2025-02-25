@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">TickTicketing</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="event_categories">
+        <item>Concert</item>
+        <item>Movie</item>
+        <item>Others</item>
+    </string-array>
 </resources>
