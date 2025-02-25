@@ -1,60 +1,158 @@
 package com.example.tickticketing.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tickticketing.R
+import com.example.tickticketing.databinding.FragmentMyEventsBinding
+import com.example.tickticketing.model.Event
+import com.example.tickticketing.repository.EventRepositoryImpl
+import com.example.tickticketing.repository.UserRepositoryImpl
+import com.example.tickticketing.ui.activity.AddEventActivity
+import com.example.tickticketing.ui.activity.UpdateEventActivity
+import com.example.tickticketing.adapter.MyEventsAdapter
+import com.example.tickticketing.viewmodel.EventViewModel
+import com.example.tickticketing.viewmodel.UserViewModel
+import com.google.android.material.snackbar.Snackbar
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [MyEventsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class MyEventsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    private lateinit var binding: FragmentMyEventsBinding
+    private lateinit var userViewModel: UserViewModel
+    private val eventViewModel: EventViewModel by lazy {
+        EventViewModel(EventRepositoryImpl())
     }
+    private lateinit var myEventsAdapter: MyEventsAdapter
+    private var currentFilter: String = "All"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_events, container, false)
+    ): View {
+        binding = FragmentMyEventsBinding.inflate(inflater, container, false)
+        val userRepository = UserRepositoryImpl()
+        userViewModel = UserViewModel(userRepository)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupRecyclerView()
+        setupFab()
+        setupFilterChips()
+        fetchUserEvents()
+    }
+
+    private fun setupRecyclerView() {
+        myEventsAdapter = MyEventsAdapter(
+            eventList = mutableListOf(),
+            onEditClicked = { event -> launchUpdateEventActivity(event) },
+            onDeleteClicked = { event -> deleteEvent(event) }
+        )
+
+        binding.recyclerViewMyEvents.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = myEventsAdapter
+        }
+    }
+
+    private fun setupFab() {
+        binding.fabAdd.setOnClickListener {
+            Log.d("MyEventsFragment", "FAB clicked! Opening AddEventActivity")
+            startActivity(Intent(requireContext(), AddEventActivity::class.java))
+        }
+    }
+
+    private fun setupFilterChips() {
+        binding.filterChipGroup.setOnCheckedChangeListener { group, checkedId ->
+            currentFilter = when (checkedId) {
+                R.id.chipAll -> "All"
+                R.id.chipMovie -> "Movie"
+                R.id.chipConcert -> "Concert"
+                R.id.chipOthers -> "Others"
+                else -> "All"
+            }
+            filterEvents()
+        }
+    }
+
+    private fun filterEvents() {
+        val filteredEvents = if (currentFilter == "All") {
+            myEventsAdapter.getAllEvents()
+        } else {
+            myEventsAdapter.getAllEvents().filter { it.category == currentFilter }
+        }
+        myEventsAdapter.setData(filteredEvents)
+        updateEmptyState(filteredEvents.isEmpty())
+    }
+
+    private fun launchUpdateEventActivity(event: Event) {
+        val intent = Intent(requireContext(), UpdateEventActivity::class.java).apply {
+            putExtra("EVENT_ID", event.id)
+            putExtra("EVENT_TITLE", event.title)
+            putExtra("EVENT_DESCRIPTION", event.description)
+            putExtra("EVENT_DATE", event.date)
+            putExtra("EVENT_LOCATION", event.location)
+            putExtra("EVENT_CATEGORY", event.category)
+            putExtra("EVENT_PRICE", event.price)
+            putExtra("EVENT_CAPACITY", event.capacity)
+            putExtra("EVENT_IMAGE_URL", event.imageUrl)
+        }
+        startActivity(intent)
+    }
+
+    private fun deleteEvent(event: Event) {
+        eventViewModel.deleteEvent(event.id) { success, message ->
+            if (success) {
+                Snackbar.make(binding.myEventsRoot, "Event deleted", Snackbar.LENGTH_SHORT).show()
+                fetchUserEvents()
+            } else {
+                Snackbar.make(binding.myEventsRoot, "Error: $message", Snackbar.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fetchUserEvents()
+    }
+
+    private fun fetchUserEvents() {
+        val currentUser = userViewModel.getCurrentUser()
+        if (currentUser == null) {
+            Snackbar.make(binding.myEventsRoot, "User not logged in", Snackbar.LENGTH_SHORT).show()
+            return
+        }
+
+        eventViewModel.getEventsByUser(currentUser.uid) { events: List<Event>, success: Boolean, message: String ->
+            if (success) {
+                myEventsAdapter.setAllEvents(events)
+                filterEvents()
+            } else {
+                Snackbar.make(binding.myEventsRoot, "Error: $message", Snackbar.LENGTH_SHORT).show()
+                updateEmptyState(true)
+            }
+        }
+    }
+
+    private fun updateEmptyState(isEmpty: Boolean) {
+        if (isEmpty) {
+            binding.recyclerViewMyEvents.visibility = View.GONE
+            binding.tvEmptyState.visibility = View.VISIBLE
+        } else {
+            binding.recyclerViewMyEvents.visibility = View.VISIBLE
+            binding.tvEmptyState.visibility = View.GONE
+        }
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MyEventsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MyEventsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        fun newInstance() = MyEventsFragment()
     }
 }
