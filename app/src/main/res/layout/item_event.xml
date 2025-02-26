@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="280dp"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp">
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Event Image -->
+        <!-- Event Image Container -->
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="180dp">
+            android:layout_height="200dp">
 
             <ImageView
                 android:id="@+id/eventImage"
@@ -24,17 +26,28 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"/>
 
+            <!-- Subtle Gradient Overlay -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_gravity="top"
+                android:background="@drawable/gradient_overlay"/>
+
             <!-- Category Badge -->
             <TextView
                 android:id="@+id/categoryBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="12dp"
+                android:layout_margin="16dp"
                 android:background="@drawable/badge_background_light"
                 android:paddingHorizontal="12dp"
-                android:paddingVertical="4dp"
-                android:textColor="@color/gray_800"
+                android:paddingVertical="6dp"
+
+                android:textColor="@android:color/black"
                 android:textSize="12sp"
+                android:text="Movie"
+
+                android:fontFamily="sans-serif-medium"
                 tools:text="Movie"/>
         </FrameLayout>
 
@@ -43,9 +56,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
-            <!-- Title and Date -->
+            <!-- Title -->
             <TextView
                 android:id="@+id/eventTitle"
                 android:layout_width="match_parent"
@@ -53,15 +66,15 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:textColor="@color/gray_900"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                tools:text="Event Title"/>
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium"
+                tools:text="Spider-Man: No Way Home"/>
 
             <!-- Location and Date Row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -69,19 +82,26 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:src="@drawable/ic_location"
-                    app:tint="@color/gray_500"/>
+                    app:tint="@color/gray_500" />
 
                 <TextView
                     android:id="@+id/eventLocation"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
+                    android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:textColor="@color/gray_600"
                     android:textSize="14sp"
-                    tools:text="Event Location"/>
+                    tools:text="Qfx" />
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="8dp"
+                    android:src="@drawable/ic_calendar"
+                    app:tint="@color/gray_500" />
 
                 <TextView
                     android:id="@+id/eventDate"
@@ -90,14 +110,14 @@
                     android:layout_marginStart="8dp"
                     android:textColor="@color/gray_600"
                     android:textSize="14sp"
-                    tools:text="Dec 25"/>
+                    tools:text="Jan 30, 2025" />
             </LinearLayout>
 
             <!-- Price and Booking Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="20dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -112,16 +132,16 @@
                         android:layout_height="wrap_content"
                         android:text="Price"
                         android:textColor="@color/gray_500"
-                        android:textSize="12sp"/>
+                        android:textSize="13sp"/>
 
                     <TextView
                         android:id="@+id/eventPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/green_600"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        tools:text="$99.99"/>
+                        android:textSize="20sp"
+                        android:fontFamily="sans-serif-medium"
+                        tools:text="$19.99"/>
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
@@ -129,10 +149,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Book Now"
+                    android:textColor="@color/black"
                     android:textAllCaps="false"
-                    app:cornerRadius="8dp"/>
+                    android:paddingHorizontal="24dp"
+                    android:paddingVertical="12dp"
+                    app:cornerRadius="12dp"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
 </com.google.android.material.card.MaterialCardView>

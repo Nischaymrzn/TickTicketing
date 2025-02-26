@@ -1,6 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <!-- Event Image -->
+        <ImageView
+            android:id="@+id/imgEvent"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="Event Image"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- Event Name -->
+        <TextView
+            android:id="@+id/tvEventName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Event Name"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/imgEvent"
+            app:layout_constraintTop_toTopOf="@id/imgEvent"
+            app:layout_constraintEnd_toStartOf="@id/btnEdit"
+            android:layout_marginStart="8dp" />
+
+        <!-- Price Paid -->
+        <TextView
+            android:id="@+id/tvPricePaid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price Paid: ₹0"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/tvEventName"
+            app:layout_constraintTop_toBottomOf="@id/tvEventName" />
+
+        <!-- Booking Date -->
+        <TextView
+            android:id="@+id/tvBookingDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Booked At: Jan 1, 2022"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/tvPricePaid"
+            app:layout_constraintTop_toBottomOf="@id/tvPricePaid" />
+
+        <!-- Booking Status -->
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status: CONFIRMED"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/tvBookingDate"
+            app:layout_constraintTop_toBottomOf="@id/tvBookingDate" />
+
+        <!-- Static Edit Button (disabled) -->
+        <ImageButton
+            android:id="@+id/btnEdit"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_edit"
+            android:tint="@color/indigo_600"
+            android:enabled="false"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnDelete" />
+
+        <!-- Delete Button -->
+        <ImageButton
+            android:id="@+id/btnDelete"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_delete"
+            android:tint="@color/red_600"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

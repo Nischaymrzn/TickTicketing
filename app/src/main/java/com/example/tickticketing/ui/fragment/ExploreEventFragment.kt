@@ -9,21 +9,26 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.tickticketing.R
 import com.example.tickticketing.adapter.EventAdapter
+import com.example.tickticketing.model.Booking
 import com.example.tickticketing.model.Event
 import com.example.tickticketing.repository.EventRepositoryImpl
+import com.example.tickticketing.utils.Loader
+import com.example.tickticketing.viewmodel.BookingViewModel
 import com.example.tickticketing.viewmodel.EventViewModel
 import com.google.android.material.chip.ChipGroup
+import com.google.firebase.auth.FirebaseAuth
 
 class ExploreEventFragment : Fragment() {
 
-    // Lazy initialization of the ViewModel using a specific repository implementation.
     private val eventViewModel: EventViewModel by lazy { EventViewModel(EventRepositoryImpl()) }
+    private val bookingViewModel: BookingViewModel by lazy { BookingViewModel() }
     private lateinit var eventAdapter: EventAdapter
+    private var currentFilter = "All"
 
     private lateinit var bannerImage: ImageView
     private lateinit var bannerTitle: TextView
@@ -42,62 +47,54 @@ class ExploreEventFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initializeViews(view)
+        setupBanner()
+        setupEventsList()
+        setupFilterChips()
+        loadEvents()
+        setupViewModelObservers()
+    }
 
-        // Initialize views from layout.
+    private fun initializeViews(view: View) {
         bannerImage = view.findViewById(R.id.bannerImage)
         bannerTitle = view.findViewById(R.id.bannerTitle)
         bannerDescription = view.findViewById(R.id.bannerDescription)
         categoryChipGroup = view.findViewById(R.id.categoryChipGroup)
         eventsRecyclerView = view.findViewById(R.id.eventsRecyclerView)
         progressBar = view.findViewById(R.id.progressBar)
-
-        setupBanner()
-        setupEventsList()
-        setupCategoryFilter()
-        loadEvents()
-        setupViewModelObservers()
     }
 
     private fun setupBanner() {
-        // Load banner image using Glide. Replace "YOUR_BANNER_IMAGE_URL" with your actual image URL.
         Glide.with(requireContext())
-            .load("https://imageio.forbes.com/specials-images/imageserve/61bf9846074b90fe3a41ffae/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds")
+            .load("https://s1.thcdn.com/design-assets/products/13508485/13508485/No%20way%20home%20banner.jpg")
             .into(bannerImage)
 
         bannerTitle.text = "Spider-Man: No Way Home"
         bannerDescription.text = "Get ready for the ultimate Spider-Man experience!"
     }
 
-    private fun setupViewModelObservers() {
-        // Observe changes to the event data.
-        eventViewModel.eventData.observe(viewLifecycleOwner) { events ->
-            eventAdapter.updateEvents(events)
-            progressBar.visibility = View.GONE
-        }
-    }
-
     private fun setupEventsList() {
         eventAdapter = EventAdapter(
-            events = emptyList(),
+            emptyList(),
             onEventClick = { event -> navigateToEventDetail(event) },
             onBookClick = { event -> handleBooking(event) }
         )
 
         eventsRecyclerView.apply {
-            layoutManager = GridLayoutManager(context, 2)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = eventAdapter
         }
     }
 
-    private fun setupCategoryFilter() {
+    private fun setupFilterChips() {
         categoryChipGroup.setOnCheckedChangeListener { _, checkedId ->
-            progressBar.visibility = View.VISIBLE
-            when (checkedId) {
-                R.id.chipAll -> eventViewModel.getAllEvents()
-                R.id.chipMovies -> eventViewModel.getEventsByCategory("Movies")
-                R.id.chipConcerts -> eventViewModel.getEventsByCategory("Concerts")
-                else -> eventViewModel.getAllEvents()
+            currentFilter = when (checkedId) {
+                R.id.chipAll -> "All"
+                R.id.chipMovies -> "Movie"       // Ensure this matches your event data
+                R.id.chipConcerts -> "Concert"     // Ensure this matches your event data
+                else -> "All"
             }
+            filterEvents()
         }
     }
 
@@ -106,13 +103,53 @@ class ExploreEventFragment : Fragment() {
         eventViewModel.getAllEvents()
     }
 
+    private fun setupViewModelObservers() {
+        eventViewModel.eventData.observe(viewLifecycleOwner) { events ->
+            eventAdapter.updateEvents(events)
+            filterEvents()
+            progressBar.visibility = View.GONE
+        }
+    }
+
+    private fun filterEvents() {
+        val allEvents = eventAdapter.getAllEvents()
+        val filteredEvents = if (currentFilter == "All") {
+            allEvents
+        } else {
+            allEvents.filter { it.category == currentFilter }
+        }
+        eventAdapter.setFilteredEvents(filteredEvents)
+    }
+
     private fun navigateToEventDetail(event: Event) {
-        // Navigate to event detail screen (implementation needed)
+        // TODO: Implement navigation to event detail screen
         Toast.makeText(context, "Viewing ${event.title}", Toast.LENGTH_SHORT).show()
     }
 
     private fun handleBooking(event: Event) {
-        // Implement your booking logic here
-        Toast.makeText(context, "Booking ${event.title}", Toast.LENGTH_SHORT).show()
+        // Show a simple loader while processing the booking
+        val loader = Loader(requireActivity())
+        loader.show()
+
+        // Retrieve the current user ID (assuming FirebaseAuth is set up)
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "unknown"
+
+        // Create a new booking object; bookingDate is set to the current time.
+        val booking = Booking(
+            eventId = event.id,
+            userId = userId,
+            bookingDate = System.currentTimeMillis(),
+            status = "CONFIRMED"
+        )
+
+        // Send booking data to Firebase via the BookingViewModel
+        bookingViewModel.createBooking(booking) { success, message, bookingId ->
+            loader.dismiss()
+            if (success) {
+                Toast.makeText(context, "Booking successful!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "Booking failed: $message", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

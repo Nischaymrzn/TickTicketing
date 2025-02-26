@@ -6,8 +6,8 @@
 
 
     <!-- Gray -->
-    <color name="gray_50">#f9fafb</color>
-    <color name="gray_100">#f3f4f6</color>
+    <color name="gray_50">#F9FAFB</color>
+    <color name="gray_100">#F3F4F6</color>
     <color name="gray_200">#e5e7eb</color>
     <color name="gray_300">#d1d5db</color>
     <color name="gray_400">#9ca3af</color>
