@@ -45,7 +45,6 @@ class EventViewModel(private val repo: EventRepository) : ViewModel() {
         }
     }
 
-    // Updated getEventsByUser with proper types
     fun getEventsByUser(userId: String, callback: (List<Event>, Boolean, String) -> Unit) {
         repo.getEventsByUser(userId) { events, success, message ->
             if (success) {

@@ -23,7 +23,7 @@ class MyBookingFragment : Fragment() {
     private lateinit var binding: FragmentMyBookingBinding
     private lateinit var userViewModel: UserViewModel
     private val bookingViewModel: BookingViewModel by lazy { BookingViewModel(BookingRepositoryImpl()) }
-    // Create an EventViewModel to fetch event details
+
     private val eventViewModel: EventViewModel by lazy { EventViewModel(EventRepositoryImpl()) }
     private lateinit var bookingAdapter: BookingAdapter
 
@@ -45,7 +45,7 @@ class MyBookingFragment : Fragment() {
 
     private fun setupRecyclerView() {
         bookingAdapter = BookingAdapter(mutableListOf()) { eventId, callback ->
-            // Use eventViewModel's getEvent hook to fetch event details.
+
             eventViewModel.getEvent(eventId) { event, success, message ->
                 callback(event)
             }

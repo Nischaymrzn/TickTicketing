@@ -29,7 +29,6 @@ class MyEventsAdapter(
     override fun onBindViewHolder(holder: MyEventsViewHolder, position: Int) {
         val event = eventList[position]
         with(holder.binding) {
-            // Load event image or use a placeholder if empty
             if (event.imageUrl.isNotEmpty()) {
                 Picasso.get()
                     .load(event.imageUrl)
@@ -42,7 +41,6 @@ class MyEventsAdapter(
             tvEventTitle.text = event.title
             chipCategory.text = event.category
 
-            // Convert timestamp to a readable date string
             val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
             val dateString = if (event.date != 0L) {
                 dateFormat.format(Date(event.date))
@@ -54,7 +52,6 @@ class MyEventsAdapter(
 
             tvEventPrice.text = "Price: ${event.price}"
 
-            // Fix for date and location icons
             tvEventDate.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_calendar, 0, 0, 0)
             tvEventDate.compoundDrawablePadding = 8
             tvEventLocation.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_location, 0, 0, 0)

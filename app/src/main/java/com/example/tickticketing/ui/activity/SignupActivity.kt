@@ -22,9 +22,8 @@ import com.squareup.picasso.Picasso
 
 class SignupActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
-
     private lateinit var userViewModel: UserViewModel
-    private lateinit var loadingUtils : Loader
+    private lateinit var loadingUtils: Loader
 
     lateinit var imageUtils: ImageUtils
     var imageUri: Uri? = null
@@ -33,20 +32,22 @@ class SignupActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding=ActivitySignupBinding.inflate(layoutInflater)
+        binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         imageUtils = ImageUtils(this)
-
-        loadingUtils = Loader(this@SignupActivity)
+        loadingUtils = Loader(this)
 
         val userRepository = UserRepositoryImpl()
         userViewModel = UserViewModel(userRepository)
 
-        imageUtils.registerActivity { url ->
-            url.let { it ->
-                imageUri = it
-                Picasso.get().load(it).into(binding.imageBrowse)
+        imageUtils.registerActivity { uri ->
+            if (uri != null) {
+                imageUri = uri
+                Picasso.get().load(uri).into(binding.imageBrowse)
+                Log.d("SignupActivity", "Image selected: $uri")
+            } else {
+                Log.e("SignupActivity", "No image selected")
             }
         }
 
@@ -54,13 +55,27 @@ class SignupActivity : AppCompatActivity() {
             imageUtils.launchGallery(this)
         }
 
-        binding.sumbitBtn.setOnClickListener{
+        binding.sumbitBtn.setOnClickListener {
+            // Validate inputs before uploading image/signing up
+            val email = binding.signupEmailText.text.toString().trim()
+            val password = binding.signupPasswordText.text.toString().trim()
+            val fullName = binding.signupFnameText.text.toString().trim()
+            val username = binding.usernameText.text.toString().trim()
+            val address = binding.signupAddressText.text.toString().trim()
+
+            if (email.isEmpty() || password.isEmpty() || fullName.isEmpty() ||
+                username.isEmpty() || address.isEmpty()
+            ) {
+                Toast.makeText(this, "Please fill in all required fields", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+
             uploadImage()
         }
 
-        binding.alreadyAccountText.setOnClickListener{
-            intent= Intent(this@SignupActivity,LoginActivity::class.java)
-            startActivity(intent)
+        binding.alreadyAccountText.setOnClickListener {
+            startActivity(Intent(this@SignupActivity, LoginActivity::class.java))
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -71,46 +86,66 @@ class SignupActivity : AppCompatActivity() {
     }
 
     private fun uploadImage() {
-        imageUri?.let { uri ->
-            userViewModel.uploadImage(this, uri) { imageUrl ->
-                Log.d("checpoirs", imageUrl.toString())
+        if (imageUri != null) {
+            userViewModel.uploadImage(this, imageUri!!) { imageUrl ->
+                Log.d("SignupActivity", "Image URL: $imageUrl")
                 if (imageUrl != null) {
                     addProduct(imageUrl)
                 } else {
-                    Log.e("Upload Error", "Failed to upload image to Cloudinary")
+                    Log.e("SignupActivity", "Failed to upload image to Cloudinary")
+
+                    addProduct("")
                 }
             }
+        } else {
+
+            Log.d("SignupActivity", "No image selected, proceeding without image")
+            addProduct("")
         }
     }
 
-    private fun addProduct(url : String){
+    private fun addProduct(url: String) {
         loadingUtils.show()
-        val email : String = binding.signupEmailText.text.toString()
-        val password : String = binding.signupPasswordText.text.toString()
-        val address : String= binding.signupAddressText.text.toString()
-        val fullName : String = binding.signupFnameText.text.toString()
-        val username : String = binding.usernameText.text.toString()
-        val userRole : String = "client"
+        val email: String = binding.signupEmailText.text.toString().trim()
+        val password: String = binding.signupPasswordText.text.toString().trim()
+        val address: String = binding.signupAddressText.text.toString().trim()
+        val fullName: String = binding.signupFnameText.text.toString().trim()
+        val username: String = binding.usernameText.text.toString().trim()
+        val userRole: String = "client"
 
-        userViewModel.signup(email,password){ success, message, userId ->
+        Log.d("SignupActivity", "Signing up with email: $email")
+
+        userViewModel.signup(email, password) { success, message, userId ->
             if (success) {
+                Log.d("SignupActivity", "Signup successful, userId: $userId")
                 val userModel = UserModel(
                     userId,
-                    fullName, email, username, address, userRole, url
+                    fullName,
+                    email,
+                    username,
+                    address,
+                    userRole,
+                    url
                 )
                 addUserToDatabase(userModel)
-            }else{
+            } else {
                 loadingUtils.dismiss()
-                Snackbar.make(binding.main,message, Snackbar.LENGTH_SHORT).show()
+                Log.e("SignupActivity", "Signup failed: $message")
+                Snackbar.make(binding.main, message, Snackbar.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun addUserToDatabase(userModel: UserModel){
-        userViewModel.addUserToDatabase(userModel){
-                _, message ->
+    private fun addUserToDatabase(userModel: UserModel) {
+        userViewModel.addUserToDatabase(userModel) { success, message ->
             loadingUtils.dismiss()
-            Toast.makeText(this@SignupActivity,message, Toast.LENGTH_SHORT).show()
+            if (success) {
+                Log.d("SignupActivity", "User added to database: $message")
+                Toast.makeText(this@SignupActivity, message, Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this@SignupActivity, LoginActivity::class.java))
+            } else {
+                Log.e("SignupActivity", "Failed to add user to database: $message")
+            }
         }
     }
 }

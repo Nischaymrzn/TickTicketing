@@ -116,7 +116,6 @@ class AddEventActivity : AppCompatActivity() {
         val currUser = userRepository.getCurrentUser()?.uid
         Log.d("hello", currUser.toString())
 
-        // Create the Event object
         val event = Event(
             title = title,
             description = description,
@@ -130,7 +129,6 @@ class AddEventActivity : AppCompatActivity() {
             bookedCount = 0
         )
 
-        // Call the ViewModel to create the event
         eventViewModel.createEvent(event) { success, message, eventId ->
             loader.dismiss()
             if (success) {

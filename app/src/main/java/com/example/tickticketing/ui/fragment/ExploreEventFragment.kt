@@ -90,8 +90,8 @@ class ExploreEventFragment : Fragment() {
         categoryChipGroup.setOnCheckedChangeListener { _, checkedId ->
             currentFilter = when (checkedId) {
                 R.id.chipAll -> "All"
-                R.id.chipMovies -> "Movie"       // Ensure this matches your event data
-                R.id.chipConcerts -> "Concert"     // Ensure this matches your event data
+                R.id.chipMovies -> "Movie"
+                R.id.chipConcerts -> "Concert"
                 else -> "All"
             }
             filterEvents()

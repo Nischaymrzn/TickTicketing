@@ -76,6 +76,6 @@ class EventAdapter(
     }
 
     private fun formatPrice(price: Double): String {
-        return "₹$price"
+        return "$price"
     }
 }

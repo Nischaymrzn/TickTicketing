@@ -1,5 +1,6 @@
 package com.example.tickticketing.ui.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -34,22 +35,18 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize the UserViewModel with the repository
         val repo = UserRepositoryImpl()
         userViewModel = UserViewModel(repo)
 
-        // Get current user and fetch data if available
         val currentUser = userViewModel.getCurrentUser()
         currentUser?.uid?.let { uid ->
             userViewModel.getDataFromDatabase(uid)
         }
 
-        // Observe user data changes to update UI
         userViewModel.userData.observe(viewLifecycleOwner) { user ->
             binding.fullName.text = user?.fullName
             binding.emailAddress.text = user?.email
 
-            // Load avatar image using Picasso: if available, load from URL; otherwise, use placeholder.
             if (!user?.imageUrl.isNullOrEmpty()) {
                 Picasso.get()
                     .load(user?.imageUrl)
@@ -60,7 +57,6 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        // When the bookings card is clicked, navigate to the MyBookingFragment via the parent activity
         binding.bookingLayout.setOnClickListener {
             (activity as? DashboardActivity)?.navigateToBookings()
         }
@@ -69,12 +65,17 @@ class ProfileFragment : Fragment() {
             (activity as? DashboardActivity)?.navigateToEvents()
         }
 
-        // Logout functionality
         binding.logout.setOnClickListener {
             userViewModel.logout { success, message ->
                 if (success) {
+                    // Remove stored credentials
+                    val sharedPreferences = requireContext().getSharedPreferences("userData", Context.MODE_PRIVATE)
+                    val editor = sharedPreferences.edit()
+                    editor.remove("email")
+                    editor.remove("password")
+                    editor.apply()
+
                     Toast.makeText(requireContext(), "Logged out successfully", Toast.LENGTH_SHORT).show()
-                    // Clear activity stack and go to LoginActivity
                     val intent = Intent(requireContext(), LoginActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)

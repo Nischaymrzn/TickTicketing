@@ -36,7 +36,6 @@ class EditProfileActivity : AppCompatActivity() {
         val userRepository = UserRepositoryImpl()
         userViewModel = UserViewModel(userRepository)
 
-        // Set up image selection similar to SignupActivity
         imageUtils.registerActivity { uri ->
             uri?.let {
                 imageUri = it
@@ -47,7 +46,6 @@ class EditProfileActivity : AppCompatActivity() {
             imageUtils.launchGallery(this)
         }
 
-        // Prefill fields with existing user data
         val currentUser = userViewModel.getCurrentUser()
         if (currentUser != null) {
             userViewModel.getDataFromDatabase(currentUser.uid)
@@ -95,7 +93,6 @@ class EditProfileActivity : AppCompatActivity() {
             return
         }
 
-        // Prepare the data to update
         val updateData = mutableMapOf<String, Any>(
             "fullName" to fullName,
             "email" to email,
@@ -103,7 +100,6 @@ class EditProfileActivity : AppCompatActivity() {
             "address" to address
         )
 
-        // If a new image was selected, upload it; otherwise, update with existing data.
         if (imageUri != null) {
             userViewModel.uploadImage(this, imageUri!!) { imageUrl ->
                 if (imageUrl != null) {

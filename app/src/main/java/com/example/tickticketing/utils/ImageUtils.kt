@@ -32,7 +32,6 @@ class ImageUtils(private val activity: AppCompatActivity) {
             }
         }
 
-        // Register permission launcher for storage access
         permissionLauncher = activity.registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
