@@ -10,19 +10,23 @@ import com.bumptech.glide.Glide
 import com.example.tickticketing.R
 import com.example.tickticketing.model.Event
 import com.google.android.material.button.MaterialButton
-import java.text.NumberFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 class EventAdapter(
-    private var events: List<Event>,
+    private var allEvents: List<Event> = emptyList(),
     private val onEventClick: (Event) -> Unit,
     private val onBookClick: (Event) -> Unit
 ) : RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
+    private var filteredEvents: List<Event> = allEvents
+
     class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val eventImage: ImageView = view.findViewById(R.id.eventImage)
+        val categoryBadge: TextView = view.findViewById(R.id.categoryBadge)
         val eventTitle: TextView = view.findViewById(R.id.eventTitle)
         val eventLocation: TextView = view.findViewById(R.id.eventLocation)
+        val eventDate: TextView = view.findViewById(R.id.eventDate)
         val eventPrice: TextView = view.findViewById(R.id.eventPrice)
         val bookButton: MaterialButton = view.findViewById(R.id.bookButton)
     }
@@ -34,24 +38,44 @@ class EventAdapter(
     }
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
-        val event = events[position]
+        val event = filteredEvents[position]
 
         Glide.with(holder.itemView.context)
             .load(event.imageUrl)
             .into(holder.eventImage)
 
+        holder.categoryBadge.text = event.category
         holder.eventTitle.text = event.title
         holder.eventLocation.text = event.location
-        holder.eventPrice.text = NumberFormat.getCurrencyInstance().format(event.price)
+        holder.eventDate.text = formatDate(event.date)
+        holder.eventPrice.text = formatPrice(event.price)
 
         holder.itemView.setOnClickListener { onEventClick(event) }
         holder.bookButton.setOnClickListener { onBookClick(event) }
     }
 
-    override fun getItemCount() = events.size
+    override fun getItemCount() = filteredEvents.size
 
     fun updateEvents(newEvents: List<Event>) {
-        events = newEvents
+        allEvents = newEvents
+        filteredEvents = newEvents
         notifyDataSetChanged()
+    }
+
+    fun getAllEvents(): List<Event> = allEvents
+
+    fun setFilteredEvents(events: List<Event>) {
+        filteredEvents = events
+        notifyDataSetChanged()
+    }
+
+    private fun formatDate(timestamp: Long): String {
+        val date = Date(timestamp)
+        val format = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+        return format.format(date)
+    }
+
+    private fun formatPrice(price: Double): String {
+        return "₹$price"
     }
 }
