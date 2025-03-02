@@ -48,7 +48,7 @@ class EventAdapter(
         holder.eventTitle.text = event.title
         holder.eventLocation.text = event.location
         holder.eventDate.text = formatDate(event.date)
-        holder.eventPrice.text = formatPrice(event.price)
+        holder.eventPrice.text = "रू ${formatPrice(event.price)}"
 
         holder.itemView.setOnClickListener { onEventClick(event) }
         holder.bookButton.setOnClickListener { onBookClick(event) }
