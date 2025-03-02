@@ -50,7 +50,7 @@ class MyEventsAdapter(
             tvEventDate.text = dateString
             tvEventLocation.text = event.location
 
-            tvEventPrice.text = "Price: ${event.price}"
+            tvEventPrice.text = "Price: रू ${event.price}"
 
             tvEventDate.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_calendar, 0, 0, 0)
             tvEventDate.compoundDrawablePadding = 8
