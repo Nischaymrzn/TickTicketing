@@ -140,7 +140,7 @@ class SignupActivity : AppCompatActivity() {
         userViewModel.addUserToDatabase(userModel) { success, message ->
             loadingUtils.dismiss()
             if (success) {
-                Log.d("SignupActivity", "User added to database: $message")
+                Log.d("SignupActivity", "User registered successfully: $message")
                 Toast.makeText(this@SignupActivity, message, Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this@SignupActivity, LoginActivity::class.java))
             } else {
