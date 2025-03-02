@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.firebase.database.ktx)
     implementation(libs.firebase.database)
     implementation(libs.androidx.fragment.ktx)
+    implementation (libs.circleimageview)
     implementation(libs.material.v190)
     implementation(libs.glide)
     annotationProcessor(libs.compiler)

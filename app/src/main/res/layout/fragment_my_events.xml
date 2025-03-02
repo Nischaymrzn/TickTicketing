@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/myEventsRoot"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingBottom="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -52,33 +53,37 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="All"
+                    style="@style/CustomChipChoice"
                     android:textColor="@color/black"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:fontFamily="@font/outfit_medium"
                     android:checked="true"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipMovie"
-                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Movie"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"/>
+                    style="@style/CustomChipChoice"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/outfit_medium"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipConcert"
-                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Concert"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"/>
+                    style="@style/CustomChipChoice"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/outfit_medium"/>
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipOthers"
-                    android:textColor="@color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Others"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"/>
+                    style="@style/CustomChipChoice"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/outfit_medium"/>
 
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>

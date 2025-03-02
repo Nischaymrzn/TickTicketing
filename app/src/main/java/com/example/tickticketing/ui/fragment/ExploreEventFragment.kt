@@ -1,5 +1,6 @@
 package com.example.tickticketing.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ import com.example.tickticketing.adapter.EventAdapter
 import com.example.tickticketing.model.Booking
 import com.example.tickticketing.model.Event
 import com.example.tickticketing.repository.EventRepositoryImpl
+import com.example.tickticketing.ui.activity.EventDetailActivity
 import com.example.tickticketing.utils.Loader
 import com.example.tickticketing.viewmodel.BookingViewModel
 import com.example.tickticketing.viewmodel.EventViewModel
@@ -122,12 +124,12 @@ class ExploreEventFragment : Fragment() {
     }
 
     private fun navigateToEventDetail(event: Event) {
-        // TODO: Implement navigation to event detail screen
-        Toast.makeText(context, "Viewing ${event.title}", Toast.LENGTH_SHORT).show()
+        val intent = Intent(requireContext(), EventDetailActivity::class.java)
+        intent.putExtra("EVENT_ID", event.id)
+        startActivity(intent)
     }
 
     private fun handleBooking(event: Event) {
-        // Show a simple loader while processing the booking
         val loader = Loader(requireActivity())
         loader.show()
 

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/gray_50">
+    android:background="@color/gray_50"
+    android:paddingBottom="10dp">
 
     <!-- Banner Section -->
     <androidx.cardview.widget.CardView
@@ -59,10 +60,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="6dp"
         android:text="Ongoing Events"
         android:textColor="@color/gray_900"
-        android:textSize="20sp"
+        android:textSize="24sp"
         android:textStyle="bold" />
 
     <!-- Category Chips -->
@@ -71,34 +72,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="12dp"
         app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipAll"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
+            style="@style/CustomChipChoice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:fontFamily="@font/outfit_medium"
             android:textColor="@color/black"
+            android:fontFamily="@font/outfit_medium"
             android:text="All Events" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipMovies"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
+            style="@style/CustomChipChoice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
+            android:fontFamily="@font/outfit_medium"
             android:text="Movies" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipConcerts"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
+            style="@style/CustomChipChoice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Concerts"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:fontFamily="@font/outfit_medium"
+            android:text="Concerts" />
     </com.google.android.material.chip.ChipGroup>
 
     <!-- Events RecyclerView -->
@@ -108,7 +111,7 @@
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:orientation="horizontal"
-        android:paddingHorizontal="8dp" />
+        android:paddingHorizontal="6dp" />
 
     <ProgressBar
         android:id="@+id/progressBar"

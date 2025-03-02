@@ -44,9 +44,20 @@ class ProfileFragment : Fragment() {
         }
 
         userViewModel.userData.observe(viewLifecycleOwner) { user ->
+            // Update profile information
             binding.fullName.text = user?.fullName
-            binding.emailAddress.text = user?.email
+            binding.emailValue.text = user?.email
+            binding.locationValue.text = user?.address ?: "Not specified"
+            binding.usernameValue.text = user?.username ?: "Not specified"
 
+            // Set user role if available
+            user?.userRole?.let { role ->
+                binding.roleValue.text = role.capitalize()
+            } ?: run {
+                binding.roleValue.text = "User"
+            }
+
+            // Load profile image
             if (!user?.imageUrl.isNullOrEmpty()) {
                 Picasso.get()
                     .load(user?.imageUrl)
@@ -88,7 +99,6 @@ class ProfileFragment : Fragment() {
         binding.edit.setOnClickListener {
             startActivity(Intent(requireContext(), EditProfileActivity::class.java))
         }
-
     }
 
     override fun onDestroyView() {
