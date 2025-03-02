@@ -41,7 +41,7 @@ class BookingAdapter(
             onFetchEvent(booking.eventId) { event ->
                 event?.let {
                     tvEventName.text = it.title
-                    tvPricePaid.text = "Price Paid: ${it.price}"
+                    tvPricePaid.text = "Price Paid: रू ${it.price}"
                     Glide.with(root.context)
                         .load(it.imageUrl)
                         .placeholder(com.example.tickticketing.R.drawable.placeholder)
